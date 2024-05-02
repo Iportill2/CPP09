@@ -1,7 +1,8 @@
-NAME = Bitcoin_Exchange
+NAME = btc
 
 
-SRCS = 	main.cpp 
+SRCS = 	main.cpp \
+		BitcoinExchange.cpp
 		
 
 
