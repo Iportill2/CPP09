@@ -1,0 +1,10 @@
+.DS_Store
+*.out
+*.o
+*.a
+.vscode
+.json
+
+Bitcoin_Exchange
+Reverse_Polish_Notation
+PmergeMe
