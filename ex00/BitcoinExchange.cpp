@@ -3,13 +3,18 @@
 
 Bitcoin::Bitcoin(void)
 {
-	this->getData();
+	//this->getData();
 	return;
 }
-Bitcoin::Bitcoin(std::string file)
+Bitcoin::Bitcoin(std::string NameAvOne,std::string NameAvTwo,std::ifstream &ifsFileOne)
 {
-	_openFileName = file;
-	this->getData();
+	/* _openFileName = file; */
+	_nameAvOne = NameAvOne;
+	_nameAvTwo = NameAvTwo;
+/* 	_FdFileOne = &ifsFileOne;
+	_FdFileTwo = &ifsFileTwo; */
+
+	this->getData(ifsFileOne);
 	return;
 }
 Bitcoin::Bitcoin(Bitcoin const & src)
@@ -30,13 +35,13 @@ Bitcoin & Bitcoin::operator=(Bitcoin const & rhs)
 	return *this;
 }
 
-void Bitcoin::getData()
+void Bitcoin::getData(std::ifstream &ifsFileOne)
 {
-	std::ifstream data (_openFileName);
-	if(data.fail())
+	//std::ifstream data (_openFileName);
+	if(ifsFileOne.fail())
 		return;
-	std::cout << "_openFileName= " << _openFileName << std::endl;
-	if (!data.is_open())
+	std::cout << "_nameAvOne = " << _nameAvOne << std::endl;
+	if (!ifsFileOne.is_open())
 	{
 		std::cerr << "Error opening file named " /* << _openFileName */ << std::endl;
 		return;
@@ -47,19 +52,21 @@ void Bitcoin::getData()
 	std::string date;
 	std::string rate;
 
-	std::getline(data, line); // skip first line
-	while (std::getline(data, line))
+	std::getline(ifsFileOne, line); // skip first line
+	while (std::getline(ifsFileOne, line))
 	{
 		date = line.substr(0, line.find(','));
 		rate = line.substr(line.find(',') + 1, line.length());
 		_dataCsv[date] = std::atof(rate.c_str());
 	}
-	data.close();
+	calculateBalance();
+	ifsFileOne.close();
 }
 
-void	Bitcoin::calculateBalance(const char *inFile)
+void	Bitcoin::calculateBalance()
 {
-	std::ifstream file(inFile);
+
+	std::ifstream file(_nameAvTwo);
 	if (!file.is_open())
 	{
 		std::cout << "Error opening file" << std::endl;
@@ -118,6 +125,13 @@ bool	Bitcoin::checkDate(const std::string date)
 		return false;
 	return true;
 }
+void getInfo(const char *nameAvOne,const char *nameAvTwo,std::ifstream &ifsFileOne)
+{
+	std::string NameAvOne = std::string(nameAvOne);
+	std::string NameAvTwo = std::string(nameAvTwo);
+	//convertimos los char * en std::string
+	Bitcoin s(NameAvOne,NameAvTwo,ifsFileOne);
+}
 
 void checkArguments(int ac,char **av)
 {
@@ -134,9 +148,10 @@ void checkArguments(int ac,char **av)
 		std::cout << "Error opening file" << std::endl;
 		return ;
 	}
+		getInfo(av[1],av[2],ifsFileOne);
+		//Bitcoin s(fileOne);
+		//s.calculateBalance(av[2],ifsFileTwo);
 
-		Bitcoin s(fileOne);
-		s.calculateBalance(av[2]);
 	}
 	else
 		std::cout << "Please, introduce the name of the file you like to read information and the name of file with your bitcoins." << std::endl;
