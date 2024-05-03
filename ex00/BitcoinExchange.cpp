@@ -8,12 +8,8 @@ Bitcoin::Bitcoin(void)
 }
 Bitcoin::Bitcoin(std::string NameAvOne,std::string NameAvTwo,std::ifstream &ifsFileOne)
 {
-	/* _openFileName = file; */
 	_nameAvOne = NameAvOne;
 	_nameAvTwo = NameAvTwo;
-/* 	_FdFileOne = &ifsFileOne;
-	_FdFileTwo = &ifsFileTwo; */
-
 	this->getData(ifsFileOne);
 	return;
 }
@@ -37,16 +33,14 @@ Bitcoin & Bitcoin::operator=(Bitcoin const & rhs)
 
 void Bitcoin::getData(std::ifstream &ifsFileOne)
 {
-	//std::ifstream data (_openFileName);
 	if(ifsFileOne.fail())
 		return;
-	std::cout << "_nameAvOne = " << _nameAvOne << std::endl;
+	//std::cout << "_nameAvOne = " << _nameAvOne << std::endl;
 	if (!ifsFileOne.is_open())
 	{
-		std::cerr << "Error opening file named " /* << _openFileName */ << std::endl;
+		std::cerr << "Error opening file named " << _nameAvOne << std::endl;
 		return;
 	}
-	/* std::cerr << "pepe" << std::endl; */
 
 	std::string line;
 	std::string date;
@@ -125,13 +119,6 @@ bool	Bitcoin::checkDate(const std::string date)
 		return false;
 	return true;
 }
-void getInfo(const char *nameAvOne,const char *nameAvTwo,std::ifstream &ifsFileOne)
-{
-	std::string NameAvOne = std::string(nameAvOne);
-	std::string NameAvTwo = std::string(nameAvTwo);
-	//convertimos los char * en std::string
-	Bitcoin s(NameAvOne,NameAvTwo,ifsFileOne);
-}
 
 void checkArguments(int ac,char **av)
 {
@@ -149,10 +136,14 @@ void checkArguments(int ac,char **av)
 		return ;
 	}
 		getInfo(av[1],av[2],ifsFileOne);
-		//Bitcoin s(fileOne);
-		//s.calculateBalance(av[2],ifsFileTwo);
-
 	}
 	else
 		std::cout << "Please, introduce the name of the file you like to read information and the name of file with your bitcoins." << std::endl;
+}
+void getInfo(const char *nameAvOne,const char *nameAvTwo,std::ifstream &ifsFileOne)
+{
+	std::string NameAvOne = std::string(nameAvOne);
+	std::string NameAvTwo = std::string(nameAvTwo);
+	//convertimos los char * en std::string
+	Bitcoin s(NameAvOne,NameAvTwo,ifsFileOne);
 }
