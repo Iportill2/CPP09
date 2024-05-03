@@ -23,21 +23,25 @@ Bitcoin::~Bitcoin(void)
 	return;
 }
 
-/* Bitcoin & Bitcoin::operator=(Bitcoin const & rhs)
+Bitcoin & Bitcoin::operator=(Bitcoin const & rhs)
 {
-	*this = rhs;
+	this->_openFileName = rhs._openFileName;
+	this->_dataCsv = rhs._dataCsv; 
 	return *this;
-} */
+}
 
 void Bitcoin::getData()
 {
-	std::ifstream data("data.csv");
-
+	std::ifstream data (_openFileName);
+	if(data.fail())
+		return;
+	std::cout << "_openFileName= " << _openFileName << std::endl;
 	if (!data.is_open())
 	{
-		std::cout << "Error opening file" << std::endl;
+		std::cerr << "Error opening file named " /* << _openFileName */ << std::endl;
 		return;
 	}
+	/* std::cerr << "pepe" << std::endl; */
 
 	std::string line;
 	std::string date;
@@ -119,8 +123,19 @@ void checkArguments(int ac,char **av)
 {
     if(ac == 3)
 	{
-		std::string file = std::string(av[1]);
-		Bitcoin s(file);
+		std::string fileOne = std::string(av[1]);
+		std::ifstream ifsFileOne(fileOne);
+
+		std::string fileTwo = std::string(av[2]);
+		std::ifstream ifsFileTwo(fileTwo);
+
+	if (!ifsFileOne.is_open() || !ifsFileTwo.is_open())
+	{
+		std::cout << "Error opening file" << std::endl;
+		return ;
+	}
+
+		Bitcoin s(fileOne);
 		s.calculateBalance(av[2]);
 	}
 	else

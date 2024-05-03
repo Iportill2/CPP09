@@ -28,12 +28,12 @@ class Bitcoin
 		Bitcoin(std::string file);
 		Bitcoin(Bitcoin const & src);
 		~Bitcoin();
-	//Bitcoin & operator=(Bitcoin const & rhs);
-	void getData();
-	void calculateBalance(const char *inFile);
-	bool checkDate(const std::string date);
+		Bitcoin & operator=(Bitcoin const & rhs);
+		void getData();
+		void calculateBalance(const char *inFile);
+		bool checkDate(const std::string date);
 
-	void printMap(const std::map<std::string, float>& _dataCsv);
+		void printMap(const std::map<std::string, float>& _dataCsv);
 
 
 };
