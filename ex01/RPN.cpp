@@ -1,6 +1,6 @@
 #include "RPN.hpp"
 
-RPN::RPN( void ) {}
+/* RPN::RPN( void ) {}
 
 RPN::RPN( RPN const & rhs ) { *this = rhs; }
 
@@ -53,3 +53,4 @@ int		RPN::topStack(void) const
 {
 	return (this->_stack.top());
 }
+ */
