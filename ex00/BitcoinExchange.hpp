@@ -20,31 +20,25 @@ class Bitcoin
 {
 	private:
 	std::string _openFileName;
-	//std::string _index;
-	//std::map<int,std::string>  _date;
-	//std::map<int,std::string> _exchangeRate;
-
-	//std::map<std::string, float> _db;
-
 	std::map<std::string,float> _dataCsv;
 
-
-	std::map<std::string,std::string> _inputTxt;
 
 	public:
 		Bitcoin();
 		Bitcoin(std::string file);
+		Bitcoin(Bitcoin const & src);
 		~Bitcoin();
-
-	//void copyFileContent(); 
-	bool checkDate(const std::string date);
+	//Bitcoin & operator=(Bitcoin const & rhs);
+	void getData();
 	void calculateBalance(const char *inFile);
-	void fromDataToMap();	
+	bool checkDate(const std::string date);
 
 	void printMap(const std::map<std::string, float>& _dataCsv);
+
 
 };
 void checkArguments(int ac,char **av);
 #endif
 //1 map
 //2 stack
+

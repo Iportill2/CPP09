@@ -1,71 +1,58 @@
+
 #include "BitcoinExchange.hpp"
 
-Bitcoin::Bitcoin()
+Bitcoin::Bitcoin(void)
 {
-std::cout << "Bitcoin created successfully!"  << std::endl;
+	this->getData();
+	return;
 }
-Bitcoin::Bitcoin(std::string file) : _openFileName(file)
+Bitcoin::Bitcoin(std::string file)
 {
-	std::cout << "Contructor Bitcoin created successfully! " << _openFileName << std::endl;
-}	
-Bitcoin::~Bitcoin()
+	_openFileName = file;
+	this->getData();
+	return;
+}
+Bitcoin::Bitcoin(Bitcoin const & src)
 {
-	
+	*this = src;
+	return;
 }
 
-void Bitcoin::fromDataToMap()
+Bitcoin::~Bitcoin(void)
 {
-    std::string line;
-    std::string date;
+	return;
+}
+
+/* Bitcoin & Bitcoin::operator=(Bitcoin const & rhs)
+{
+	*this = rhs;
+	return *this;
+} */
+
+void Bitcoin::getData()
+{
+	std::ifstream data("data.csv");
+
+	if (!data.is_open())
+	{
+		std::cout << "Error opening file" << std::endl;
+		return;
+	}
+
+	std::string line;
+	std::string date;
 	std::string rate;
 
-    std::ifstream file(_openFileName);
-
-    if (!file) {
-        std::cerr << "Error opening file " << _openFileName << std::endl;
-        return ;
-    }
-
-
-    std::getline(file, line); // skip first line
-	while (std::getline(file, line))
+	std::getline(data, line); // skip first line
+	while (std::getline(data, line))
 	{
 		date = line.substr(0, line.find(','));
 		rate = line.substr(line.find(',') + 1, line.length());
 		_dataCsv[date] = std::atof(rate.c_str());
 	}
-    //std::cout << "copiado el contenido en el map" << std::endl;
-    //printMap(_dataCsv);
-    file.close();
-    return ;
+	data.close();
 }
 
-void Bitcoin::printMap(const std::map<std::string, float>& _dataCsv) 
-{
-    //
-    std::map<std::string, float>::const_iterator it;
-    for (it = _dataCsv.begin(); it != _dataCsv.end(); ++it) 
-    {
-        std::cout << "Clave: " << it->first << ", Valor: " << it->second << std::endl;
-    }
-}
-bool	Bitcoin::checkDate(const std::string date)
-{
-	std::string year = date.substr(0, 4);
-	std::string month = date.substr(5, 2);
-	std::string day = date.substr(8, 2);
-
-
-	if (year.length() != 4 || month.length() != 2 || day.length() != 2)
-		return false;
-	if (std::atoi(year.c_str()) < 0 || std::atoi(year.c_str()) > 2024)
-		return false;
-	if (std::atoi(month.c_str()) < 0 || std::atoi(month.c_str()) > 12)
-		return false;
-	if (std::atoi(day.c_str()) < 0 || std::atoi(day.c_str()) > 31)
-		return false;
-	return true;
-}
 void	Bitcoin::calculateBalance(const char *inFile)
 {
 	std::ifstream file(inFile);
@@ -108,6 +95,26 @@ void	Bitcoin::calculateBalance(const char *inFile)
 	}
 	file.close();
 }
+
+/* checks if the date is between 0000-00-00 and 2024-01-01 */
+bool	Bitcoin::checkDate(const std::string date)
+{
+	std::string year = date.substr(0, 4);
+	std::string month = date.substr(5, 2);
+	std::string day = date.substr(8, 2);
+
+
+	if (year.length() != 4 || month.length() != 2 || day.length() != 2)
+		return false;
+	if (std::atoi(year.c_str()) < 0 || std::atoi(year.c_str()) > 2024)
+		return false;
+	if (std::atoi(month.c_str()) < 0 || std::atoi(month.c_str()) > 12)
+		return false;
+	if (std::atoi(day.c_str()) < 0 || std::atoi(day.c_str()) > 31)
+		return false;
+	return true;
+}
+
 void checkArguments(int ac,char **av)
 {
     if(ac == 3)
@@ -119,30 +126,3 @@ void checkArguments(int ac,char **av)
 	else
 		std::cout << "Please, introduce the name of the file you like to read information and the name of file with your bitcoins." << std::endl;
 }
-
-/* void Bitcoin::copyFileContent() 
-{
-    std::ifstream inputFile(_openFileName);
-    std::ofstream outputFile("docu");
-
-    if (!inputFile) 
-	{
-        std::cerr << "No se pudo abrir el archivo "<< _openFileName << std::endl;
-        return;
-    }
-
-    if (!outputFile) 
-	{
-        std::cerr << "No se pudo abrir el archivo docu";
-        return;
-    }
-
-    char ch;
-    while (inputFile >> std::noskipws >> ch) 
-	{
-        outputFile << ch;
-    }
-
-    inputFile.close();
-    outputFile.close();
-} */
