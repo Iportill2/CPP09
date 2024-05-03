@@ -31,11 +31,11 @@ class Bitcoin
 
 	public:
 		Bitcoin();
-		Bitcoin(std::string NameAvOne,std::string NameAvTwo,std::ifstream &ifsFileOne);
+		Bitcoin(std::string NameAvOne,std::string NameAvTwo);
 		Bitcoin(Bitcoin const & src);
 		~Bitcoin();
 		Bitcoin & operator=(Bitcoin const & rhs);
-		void getData(std::ifstream &ifsFileOne);
+		void getData();
 		void calculateBalance();
 		bool checkDate(const std::string date);
 
@@ -43,7 +43,6 @@ class Bitcoin
 
 
 };
-void getInfo(const char *nameAvOne,const char *nameAvTwo,std::ifstream &ifsFileOne);
 void checkArguments(int ac,char **av);
 #endif
 //1 map

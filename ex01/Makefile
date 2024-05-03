@@ -1,4 +1,4 @@
-NAME = Reverse_Polish_Notation
+NAME = RPN
 
 
 SRCS = 	main.cpp 
