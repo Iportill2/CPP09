@@ -4,6 +4,23 @@
 #include <iostream>
 #include <string>
 #include <stack>
+class rpn
+{
+		private:
+		std::stack<int> _stack;
+
+	public:
+		rpn( void );
+		rpn( rpn const & rhs );
+		~rpn( void );
+
+		rpn & operator=(rpn const & rhs);
+
+		bool	operation(const char op);
+		
+		void 	pushNum(const int num);
+		int		topStack(void) const;
+};
 
 //usaremos stack para este ejercicio
 //ejemplo: 3 4 + RESULTADO 7 
