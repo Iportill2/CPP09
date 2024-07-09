@@ -1,6 +1,11 @@
+
 #include "BitcoinExchange.hpp"
-int main(int ac,char **av) 
+
+int main()
 {
-	checkArguments(ac,av);
+	BitcoinExchange btc;
+
+	btc.calculateBalance("input.txt");
+	
 	return 0;
 }

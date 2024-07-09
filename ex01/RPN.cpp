@@ -1,100 +1,71 @@
+//
+// Created by Aingeru Alvarez Sanchez on 3/21/23.
+//
+
 #include "RPN.hpp"
-rpn::rpn( void ) {}
+#include <stdexcept>
+#include <iostream>
+#include <cstdlib>
+#include <string>
 
-rpn::rpn( rpn const & rhs ) { *this = rhs; }
+RPN::RPN() : _operationStack() {}
 
-rpn::~rpn( void ) {}
+RPN::RPN(const RPN &cpy) : _operationStack(cpy._operationStack) {}
 
-rpn & rpn::operator=(rpn const & rhs)
-{
-	this->_stack = rhs._stack;
-	return *this;
+bool RPN::parseInput(const std::string &input) {
+    for (std::string::const_iterator it = input.begin(); it != input.end(); it++) {
+        if ((!std::isdigit(*it) || std::strtol(&(*it), NULL, 10) > 10 || std::strtol(&(*it), NULL, 10) < 0)
+            && (*it != '+' && *it != '-' && *it != '*' && *it != '/' && *it != ' '))
+            return  true;
+    }
+    return  false;
 }
 
-
-bool	rpn::operation(const char op)
-{
-	int a;
-	int b;
-
-	if (this->_stack.size() < 2)
-	{
-		std::cout << "Error" << std::endl;
-		return (false);
-	}
-	a = this->_stack.top();
-	this->_stack.pop();
-	b = this->_stack.top();
-	this->_stack.pop();
-	switch (op)
-	{
-		case '+':
-			this->_stack.push(b + a);
-			break;
-		case '-':
-			this->_stack.push(b - a);
-			break;
-		case '*':
-			this->_stack.push(b * a);
-			break;
-		case '/':
-			this->_stack.push(b / a);
-			break;
-	}
-	return (true);
+std::string RPN::createTokens(const std::string &input) {
+    std::string result;
+    for (std::string::const_iterator it = input.begin(); it != input.end(); it++) {
+        if (*it != ' ')
+            result.push_back(*it);
+    }
+    return  result;
 }
 
-/* RPN::RPN( void ) {}
+int RPN::performRpnOperation(const std::string &input) {
+    if (input.empty() || input.find_first_not_of(' ') == std::string::npos
+        || this->parseInput(input)) {
+        throw   std::invalid_argument("");
+    }
 
-RPN::RPN( RPN const & rhs ) { *this = rhs; }
-
-RPN::~RPN( void ) {}
-
-RPN & RPN::operator=(RPN const & rhs)
-{
-	this->_stack = rhs._stack;
-	return *this;
+    std::string token = this->createTokens(input);
+    int firstArg = 0, secondArg = 0;
+    for (std::string::iterator it = token.begin(); it != token.end(); it++) {
+        if (std::isdigit(*it)) {
+            this->_operationStack.push(*it - '0');
+        } else {
+            firstArg = this->_operationStack.top();
+            this->_operationStack.pop();
+            if (this->_operationStack.empty()) {
+                throw   std::invalid_argument("");
+            }
+            secondArg = this->_operationStack.top();
+            this->_operationStack.pop();
+            switch (*it) {
+                case '+': this->_operationStack.push(secondArg + firstArg); break;
+                case '-': this->_operationStack.push(secondArg - firstArg); break;
+                case '*': this->_operationStack.push(secondArg * firstArg); break;
+                case '/': this->_operationStack.push(secondArg / firstArg); break;
+            }
+        }
+    }
+    if (this->_operationStack.size() > 1) {
+        throw   std::invalid_argument("");
+    }
+    return  this->_operationStack.top();
 }
 
-bool	RPN::operation(const char op)
-{
-	int a;
-	int b;
-
-	if (this->_stack.size() < 2)
-	{
-		std::cout << "Error" << std::endl;
-		return (false);
-	}
-	a = this->_stack.top();
-	this->_stack.pop();
-	b = this->_stack.top();
-	this->_stack.pop();
-	switch (op)
-	{
-		case '+':
-			this->_stack.push(b + a);
-			break;
-		case '-':
-			this->_stack.push(b - a);
-			break;
-		case '*':
-			this->_stack.push(b * a);
-			break;
-		case '/':
-			this->_stack.push(b / a);
-			break;
-	}
-	return (true);
+RPN &RPN::operator=(const RPN &cpy) {
+    this->_operationStack = cpy._operationStack;
+    return *this;
 }
 
-void RPN::pushNum(const int num)
-{
-	this->_stack.push(num);
-}
-
-int		RPN::topStack(void) const
-{
-	return (this->_stack.top());
-}
- */
+RPN::~RPN() {}

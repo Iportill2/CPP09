@@ -1,45 +1,37 @@
 
+
 #include "BitcoinExchange.hpp"
 
-Bitcoin::Bitcoin(void)
+BitcoinExchange::BitcoinExchange(void)
 {
-	//this->getData();
-	return;
-}
-Bitcoin::Bitcoin(std::string NameAvOne,std::string NameAvTwo)
-{
-	_nameAvOne = NameAvOne;
-	_nameAvTwo = NameAvTwo;
 	this->getData();
 	return;
 }
-Bitcoin::Bitcoin(Bitcoin const & src)
+
+BitcoinExchange::BitcoinExchange(BitcoinExchange const & src)
 {
 	*this = src;
 	return;
 }
 
-Bitcoin::~Bitcoin(void)
+BitcoinExchange::~BitcoinExchange(void)
 {
 	return;
 }
 
-Bitcoin & Bitcoin::operator=(Bitcoin const & rhs)
+BitcoinExchange & BitcoinExchange::operator=(BitcoinExchange const & rhs)
 {
-	this->_openFileName = rhs._openFileName;
-	this->_dataCsv = rhs._dataCsv; 
+	*this = rhs;
 	return *this;
 }
 
-void Bitcoin::getData()
+void BitcoinExchange::getData()
 {
-	std::ifstream fd1 (_nameAvOne);
-	if(fd1.fail())
-		return;
-	//std::cout << "_nameAvOne = " << _nameAvOne << std::endl;
-	if (!fd1.is_open())
+	std::ifstream data("data.csv");
+
+	if (!data.is_open())
 	{
-		std::cerr << "Error opening file named " << _nameAvOne << std::endl;
+		std::cout << "Error opening file" << std::endl;
 		return;
 	}
 
@@ -47,21 +39,19 @@ void Bitcoin::getData()
 	std::string date;
 	std::string rate;
 
-	std::getline(fd1, line); // skip first line
-	while (std::getline(fd1, line))
+	std::getline(data, line); // skip first line
+	while (std::getline(data, line))
 	{
 		date = line.substr(0, line.find(','));
 		rate = line.substr(line.find(',') + 1, line.length());
-		_dataCsv[date] = std::atof(rate.c_str());
+		_db[date] = std::atof(rate.c_str());
 	}
-	fd1.close();
-	calculateBalance();
+	data.close();
 }
 
-void	Bitcoin::calculateBalance()
+void	BitcoinExchange::calculateBalance(const char *inFile)
 {
-
-	std::ifstream file(_nameAvTwo);
+	std::ifstream file(inFile);
 	if (!file.is_open())
 	{
 		std::cout << "Error opening file" << std::endl;
@@ -92,7 +82,7 @@ void	Bitcoin::calculateBalance()
 			std::cout << "Error: too large a number." << std::endl;
 		else
 		{
-			std::map<std::string, float>::const_iterator it = this->_dataCsv.upper_bound(date);
+			std::map<std::string, float>::const_iterator it = this->_db.upper_bound(date);
 			//std::cout << "date*: " << date << std::endl;
 			if (it->first.compare(date) != 0)
 				--it;
@@ -103,7 +93,7 @@ void	Bitcoin::calculateBalance()
 }
 
 /* checks if the date is between 0000-00-00 and 2024-01-01 */
-bool	Bitcoin::checkDate(const std::string date)
+bool	BitcoinExchange::checkDate(const std::string date)
 {
 	std::string year = date.substr(0, 4);
 	std::string month = date.substr(5, 2);
@@ -119,28 +109,5 @@ bool	Bitcoin::checkDate(const std::string date)
 	if (std::atoi(day.c_str()) < 0 || std::atoi(day.c_str()) > 31)
 		return false;
 	return true;
-}
-
-void checkArguments(int ac,char **av)
-{
-    if(ac == 3)
-	{
-		std::string NameAvOne = std::string(av[1]);
-		std::ifstream fd1 (NameAvOne);
-		std::string NameAvTwo = std::string(av[2]);
-		std::ifstream fd2(NameAvTwo);
-
-		if (!fd1.is_open() || !fd2.is_open())
-		{
-			std::cout << "Error opening file" << std::endl;
-			return ;
-		}
-		fd1.close();
-		fd2.close();
-		//if everything its OK call to contructor
-		Bitcoin s(NameAvOne,NameAvTwo);
-	}
-	else
-		std::cout << "Please, introduce the name of the file you like to read information and the name of file with your bitcoins." << std::endl;
 }
 
