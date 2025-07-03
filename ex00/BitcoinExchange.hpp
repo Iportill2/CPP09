@@ -8,6 +8,7 @@
 # include <fstream>
 # include <cstdlib>
 # include <map>
+# include <cctype>
 
 class BitcoinExchange
 {

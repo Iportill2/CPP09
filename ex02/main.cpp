@@ -3,21 +3,23 @@
 
 int main(int argc, char **argv)
 {
-	if (argc == 1)
-		std::cout << "Error" << std::endl;
-	else
+	if (argc < 2)
 	{
-		try
-		{
-			PmergeMe pm(argv);
-			std::cout << "Before: ";
-			pm.printVec();
-			pm.algorithm();
-		}
-		catch(const std::exception &e)
-		{
-			std::cerr << e.what() << std::endl;
-		}
+		std::cout << "Error" << std::endl;
+		return 1;
+	}
+	
+	try
+	{
+		PmergeMe pm(argv);
+		std::cout << "Before: ";
+		pm.printVec();
+		pm.algorithm();
+	}
+	catch(const std::exception &e)
+	{
+		std::cerr << e.what() << std::endl;
+		return 1;
 	}
 	return 0;
 }

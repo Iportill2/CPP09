@@ -27,8 +27,13 @@ all:	${NAME}
 clean:
 		@${RM} ${OBJS} ${DEPS}
 		@echo "\n${BLUE} ◎ $(RED)All objects cleaned successfully ${BLUE}◎$(DEF_COLOR)\n"
-fclean:
-		@${RM} ${OBJS} ${DEPS} ${NAME}
+fclean:	clean
+		@${RM} ${NAME}
+		@echo "\n${BLUE} ◎ $(RED)All cleaned successfully ${BLUE}◎$(DEF_COLOR)\n"
+
+re:		fclean all
+
+.PHONY: all clean fclean re
 		@echo "\n${BLUE} ◎ $(RED)All objects and executable cleaned successfully${BLUE} ◎$(DEF_COLOR)\n"
 
 re: fclean all

@@ -21,8 +21,18 @@ PmergeMe::PmergeMe(char **argv)
 		double num = static_cast<double>(atof(argv[i]));
 		if (num > INT_MAX || num < 0)
 			throwExcep();
-		deq.push_back(atoi(argv[i]));
-		vec.push_back(atoi(argv[i]));
+		
+		int value = atoi(argv[i]);
+		
+		// Check for duplicates
+		for (size_t j = 0; j < vec.size(); j++)
+		{
+			if (vec[j] == value)
+				throwExcep();
+		}
+		
+		deq.push_back(value);
+		vec.push_back(value);
 	}
 }
 
